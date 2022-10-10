@@ -15,3 +15,13 @@ PGDATABASE=nc_news
 
 PGDATABASE=nc_news_test
 ```
+
+## 2) Initiate modules and database
+
+run the following to install required modules:
+
+> npm i
+
+then run the following to setup the database:
+
+> npm run-script setup-dbs

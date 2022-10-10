@@ -36,7 +36,12 @@ describe('get:', () => {
 				});
 		});
 		test('status:404 Not Found', () => {
-			return request(app).get('/api/topic').expect(404);
+            return request(app).get('/api/topic').expect(404)
+                .then(res => {
+                    expect(res.error.path).toBe("/api/topic")
+                    expect(res.error.method).toBe("GET")
+                    expect(res.error.text).toBe("<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n<meta charset=\"utf-8\">\n<title>Error</title>\n</head>\n<body>\n<pre>Cannot GET /api/topic</pre>\n</body>\n</html>\n")
+                });
 		});
 	});
 });

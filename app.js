@@ -11,8 +11,14 @@ app.use((err, req, res, next) => {
         res.status(err.status).send({ message: err.msg })
     } else { next(err)}
 }) 
+
+app.all('*', (req, res, next) => {
+    res.status(404)
+        .send("error: path not found")
+})
+
 app.use((err, req, res, next) => {
-    res.sendStatus(500).send({ message: "internal server error" });
+    res.sendStatus(500).send("internal server error");
 });
 
 module.exports = app;

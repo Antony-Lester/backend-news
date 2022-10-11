@@ -8,7 +8,7 @@ beforeEach(() => seed(testData));
 afterAll(() => {
 	if (db.end) db.end();
 });
-describe('get:', () => {
+describe('GET:', () => {
     describe('/api/topics', () => {
         test('status:200 returns a single array', () => {
             return request(app)
@@ -119,4 +119,61 @@ describe('get:', () => {
 	
         });
     });
+});
+describe('PATCH:',() => {
+    describe('/api/articles/:article_id', () => {
+        test('status:202 returns a article with updated values when incremented', () => {
+            return request(app)
+                .patch('/api/articles/1')
+                .send({ inc_votes : 1 })
+                .expect(202)
+                .then(res => {
+                    expect(res._body).toEqual({
+                        article_id: 1,
+                        title: 'Living in the shadow of a great man',
+                        topic: 'mitch',
+                        author: 'butter_bridge',
+                        body: 'I find this existence challenging',
+                        created_at: '2020-07-09T20:11:00.000Z',
+                        votes: 101
+                    })
+                });
+        })
+        test('status:202 returns a article with updated values when decremented', () => {
+            return request(app)
+                .patch('/api/articles/3')
+                .send({ inc_votes : -100 })
+                .expect(202)
+                .then(res => {
+                    expect(res._body).toEqual({
+                        article_id: 3,
+                        title: 'Eight pug gifs that remind me of mitch',
+                        topic: 'mitch',
+                        author: 'icellusedkars',
+                        body: 'some gifs',
+                        created_at: '2020-11-03T09:12:00.000Z',
+                        votes: -100
+                      })
+                });
+         })
+        test('status:304 when passed data is missing property', () => { 
+            return request(app)
+                .patch('/api/articles/3')
+                .send({ inc_vote : 1 })
+                .expect(304)
+                .then(({ res }) => {
+                    
+                    expect(res.statusMessage).toEqual('Not Modified')
+                })
+        })
+        test('status:304 when the property value is not valid', () => {
+            return request(app)
+                .patch('/api/articles/3')
+                .send({ inc_votes : "TEST" })
+                .expect(304)
+                .then(({ res }) => {
+                    expect(res.statusMessage).toEqual('Not Modified')
+                })
+         })
+    })
 });

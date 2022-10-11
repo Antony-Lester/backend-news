@@ -5,12 +5,14 @@ app.use(express.json());
 
 const getArticle = require(`./controllers/get-article.js`);
 const getTopics = require(`./controllers/get-topics`);
+const getUsers = require(`./controllers/get-users`)
 
 app.get('/api/topics', getTopics);
-app.get('/api/articles/:article_id', getArticle)
+app.get('/api/articles/:article_id', getArticle);
+app.get('/api/users', getUsers);
 
 app.all('/*', (req, res, next) => {
-    res.status(404).send({ msg: "Invalid path" })
+    res.status(404).send({ msg: "Not found" })
 })
 //400
 app.use((err, req, res, next) => {
@@ -20,7 +22,6 @@ app.use((err, req, res, next) => {
 }) 
 //404
 app.use((err, req, res, next) => {
-    console.log("IN USE 2", err.code)
     if (err.code === 404) {
         res.status(404).send({ msg: err.msg })
     } else {next(err)}

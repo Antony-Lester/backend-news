@@ -3,6 +3,7 @@ const request = require('supertest');
 const db = require(`../db/connection`);
 const seed = require('../db/seeds/seed');
 const testData = require('../db/data/test-data');
+const { expect } = require('@jest/globals');
 
 beforeEach(() => seed(testData));
 afterAll(() => {
@@ -38,7 +39,7 @@ describe('get:', () => {
                 .get('/api/topic')
                 .expect(404)
                 .then(({ body }) => {
-                    expect(body.msg).toBe('Invalid path');
+                    expect(body.msg).toBe('Not found');
                 });
 	
         });
@@ -71,7 +72,6 @@ describe('get:', () => {
                 .get('/api/articles/DELETE FROM articles')
                 .expect(400)
                 .then(({ body }) => {
-                    console.log("IN TEST", body)
                     expect(body.msg).toBe('Invalid id')
                 })
         });
@@ -82,6 +82,41 @@ describe('get:', () => {
                 .then(({ body }) => {
                     expect(body.msg).toEqual('Article not found')
                 })
+        });
+    });
+    describe('/api/users', () => {
+        test('status:200 returns a single array', () => {
+            return request(app)
+                .get('/api/users')
+                .expect(200)
+                .then(res => {
+                    expect(res._body).toBeInstanceOf(Array);
+                });
+        });
+        test('status:200 returns a array of objects containing property: username, name & avatar_url', () => {
+            return request(app)
+                .get('/api/users')
+                .expect(200)
+                .then(res => {
+                    res._body.forEach(news => {
+                        expect(news).toEqual(
+                            expect.objectContaining({
+                                username: expect.any(String),
+                                name: expect.any(String),
+                                avatar_url: expect.any(String)
+                            }),
+                        );
+                    });
+                });
+        });
+        test('status:404 Not Found', () => {
+            return request(app)
+                .get('/api/users/?')
+                .expect(404)
+                .then(({ body }) => {
+                    expect(body.msg).toBe('Not found');
+                });
+	
         });
     });
 });

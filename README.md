@@ -25,3 +25,17 @@ run the following to install required modules:
 then run the following to setup the database:
 
 > npm run-script setup-dbs
+
+## Available endpoints
+
+>/api/topics
+
+returns all topics.
+
+>/api/users
+
+returns all users.
+
+>/api/articles/:article_id
+
+returns a specific article.

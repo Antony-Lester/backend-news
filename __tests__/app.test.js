@@ -36,7 +36,52 @@ describe('get:', () => {
 				});
 		});
 		test('status:404 Not Found', () => {
-            return request(app).get('/api/topic').expect(404).then(res => {expect(res.error.text).toBe("error: path not found")})
+			return request(app)
+				.get('/api/topic')
+				.expect(404)
+				.then(res => {
+					expect(res.error.text).toBe('error: path or content not found');
+				});
 		});
+	});
+	describe('/api/articles/:article_id', () => {
+		test('status:200 returns a single object', () => {
+			return request(app)
+				.get('/api/articles/1')
+				.expect(200)
+                .then(res => {
+					expect(res.body).toBeInstanceOf(Object);
+				});
+		});
+		test('status:200 returns a object with the required properties', () => {
+			return request(app)
+				.get('/api/articles/1')
+				.expect(200)
+				.then(res => {
+					expect(res._body).toEqual(
+						expect.objectContaining({
+							author: expect.any(String),
+							title: expect.any(String),
+							article_id: expect.any(Number),
+							body: expect.any(String),
+							topic: expect.any(String),
+							created_at: expect.any(String),
+							votes: expect.any(Number),
+						}),
+					);
+				});
+        });
+        test('status:404 no content', () => {
+            return request(app)
+                .get('/api/articles/99999')
+                .expect(404)
+                .then(res => { expect(res.error.text).toBe('error: path or content not found')})
+        });
+        test('status:500 protected from sql injection', () => {
+            return request(app)
+                .get('/api/articles/DELETE FROM articles')
+                .expect(500)
+                .then(res => { expect(res.error.text).toBe("Internal Server Error")})
+        })
 	});
 });

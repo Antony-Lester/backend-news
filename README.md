@@ -30,12 +30,13 @@ then run the following to setup the database:
 
 >/api/topics
 
-returns all topics.
+GET: returns all topics.
 
 >/api/users
 
-returns all users.
+GET: returns all users.
 
 >/api/articles/:article_id
 
-returns a specific article.
+GET: returns a specific article. 
+PATCH: updates a specific article.

@@ -3,17 +3,27 @@ const app = express();
 
 app.use(express.json());
 
-const getArticle = require(`./controllers/get-article.js`);
+const getArticle = require(`./controllers/get-article`);
 const getTopics = require(`./controllers/get-topics`);
 const getUsers = require(`./controllers/get-users`)
+
+const patchArticle = require(`./controllers/patch-article`)
 
 app.get('/api/topics', getTopics);
 app.get('/api/articles/:article_id', getArticle);
 app.get('/api/users', getUsers);
 
+app.patch('/api/articles/:article_id', patchArticle)
+
 app.all('/*', (req, res, next) => {
     res.status(404).send({ msg: "Not found" })
 })
+//304
+app.use((err, req, res, next) => {
+    if (err.code === 304) {
+        res.status(304).send({ msg: err.statusMessage })
+    } else {next(err)}
+}) 
 //400
 app.use((err, req, res, next) => {
     if (err.code === '22P02') {
@@ -32,3 +42,5 @@ app.use((err, req, res, next) => {
 });
 
 module.exports = app;
+
+

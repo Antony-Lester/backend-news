@@ -111,7 +111,7 @@ describe('get:', () => {
         });
         test('status:404 Not Found', () => {
             return request(app)
-                .get('/api/users/?')
+                .get('/api/userss')
                 .expect(404)
                 .then(({ body }) => {
                     expect(body.msg).toBe('Not found');

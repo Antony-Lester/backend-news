@@ -10,5 +10,5 @@ module.exports = function fetchArticle(article_id) {
         .then(({ rows: article }) => {
             if (article.length === 0) { return Promise.reject({ code: 404 }) }
             else { return article[0] }
-        })
+        });
 };

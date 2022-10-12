@@ -56,18 +56,23 @@ describe('GET:', () => {
 				.get('/api/articles/1')
 				.expect(200)
 				.then(({ body }) => {
-					expect(body).toEqual({
-						article_id: 1,
-						title: 'Living in the shadow of a great man',
-						topic: 'mitch',
-						author: 'butter_bridge',
-						body: 'I find this existence challenging',
-						created_at: '2020-07-09T20:11:00.000Z',
-						votes: 100,
-						comment_count: 11,
-					});
+					expect(body.article_id).toBe(1);
+					expect(body.title).toBe('Living in the shadow of a great man');
+					expect(body.topic).toBe('mitch');
+					expect(body.author).toBe('butter_bridge');
+					expect(body.body).toBe('I find this existence challenging')
+					expect(body.created_at).toBe('2020-07-09T20:11:00.000Z');
+					expect(body.votes).toBe(100);
 				});
 		});
+		test('status:200 returns a object with a comment counter', () => {
+			return request(app)
+				.get('/api/articles/1')
+				.expect(200)
+				.then(({ body }) => {
+					expect(body.comment_count).toBe(11)
+				});
+		})
 		test('status:400 protected from sql injection', () => {
 			return request(app)
 				.get('/api/articles/DELETE FROM articles')

@@ -89,6 +89,44 @@ describe('GET:', () => {
 					expect(body.msg).toEqual('Not found');
 				});
 		});
+		describe('/comments', () => {
+			test('status:200 returns a array of objects with the required properties', () => {
+				return request(app)
+					.get('/api/articles/1/comments')
+					.expect(200)
+					.then((comments) => {
+						comments._body.forEach(comment => {
+							expect(comment).toEqual(
+								expect.objectContaining({
+									comment_id: expect.any(Number),
+									votes: expect.any(Number),
+									created_at: expect.any(String),
+									author: expect.any(String),
+									body: expect.any(String)
+							}))
+						 })
+						
+					});
+			 })
+			test('status:200 returns array of objects sorted by created_at descending', () => {
+				return request(app)
+					.get('/api/articles/1/comments')
+					.expect(200)
+					.then(( comments ) => {
+						expect(comments._body[0].created_at).toBe('2020-11-03T21:00:00.000Z')
+						expect(comments._body[1].created_at).toBe('2020-10-31T03:03:00.000Z')
+						expect(comments._body[2].created_at).toBe('2020-07-21T00:20:00.000Z')
+					});
+			 })
+			test('status:404 no content', () => {
+				return request(app)
+				.get('/api/articles/99999/comments')
+				.expect(404)
+				.then(({ body }) => {
+					expect(body.msg).toEqual('Not found');
+				});
+			 })
+		})
 	});
 	describe('/api/users', () => {
 		test('status:200 returns a single array', () => {

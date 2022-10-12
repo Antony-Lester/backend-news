@@ -42,6 +42,66 @@ describe('GET:', () => {
 				});
 		});
 	});
+	describe('/api/articles', () => { 
+		test('status:200 returns a array of objects', () => {
+			return request(app)
+				.get('/api/articles')
+				.expect(200)
+				.then(res => {
+					expect(res.body).toBeInstanceOf(Array);
+					res.body.forEach(article => expect(article).toBeInstanceOf(Object))
+				});
+		 })
+		test('status:200 the objects contain the required property', () => {
+			return request(app)
+				.get('/api/articles')
+				.expect(200)
+				.then(res => {res.body.forEach(() => {
+					expect.objectContaining({
+						author: expect.any(String),
+						title: expect.any(String),
+						article_id: expect.any(Number),
+						topic: expect.any(String),
+						body: expect.any(String),
+						created_at: expect.any(Number),
+						votes: expect.any(Number),
+						comment_count: expect.any(Number),
+						})
+					})
+				});
+		})
+		test('status:200 the array should be sorted by date descending as default', () => {
+			return request(app)
+				.get('/api/articles')
+				.expect(200)
+				.then(res => {
+					expect(res.body[0].created_at).toBe('2020-11-03T09:12:00.000Z')
+					expect(res.body[1].created_at).toBe('2020-10-18T01:00:00.000Z')
+					expect(res.body[2].created_at).toBe('2020-08-03T13:14:00.000Z')
+				});
+		})
+		describe('queries', () => {
+			test('status:200 should accept "topic" and filters results by the given value', () => {
+				return request(app)
+				.get('/api/articles?topic=mitch')
+				.expect(200)
+					.then(res => {
+						expect(res.body.length).toBe(4)
+						res.body.forEach((article) => { 
+							expect(article.topic).toBe('mitch')
+						})
+				});
+			})
+			test('status:404 should return error if topic value not in database', () => {
+				return request(app)
+				.get('/api/articles?topic=apple')
+				.expect(404)
+					.then(({ body }) => {
+					expect(body.msg).toEqual('Not found');
+				});
+			})
+		 })
+	})
 	describe('/api/articles/:article_id', () => {
 		test('status:200 returns a single object', () => {
 			return request(app)
@@ -56,18 +116,23 @@ describe('GET:', () => {
 				.get('/api/articles/1')
 				.expect(200)
 				.then(({ body }) => {
-					expect(body).toEqual({
-						article_id: 1,
-						title: 'Living in the shadow of a great man',
-						topic: 'mitch',
-						author: 'butter_bridge',
-						body: 'I find this existence challenging',
-						created_at: '2020-07-09T20:11:00.000Z',
-						votes: 100,
-						comment_count: 11,
-					});
+					expect(body.article_id).toBe(1);
+					expect(body.title).toBe('Living in the shadow of a great man');
+					expect(body.topic).toBe('mitch');
+					expect(body.author).toBe('butter_bridge');
+					expect(body.body).toBe('I find this existence challenging')
+					expect(body.created_at).toBe('2020-07-09T20:11:00.000Z');
+					expect(body.votes).toBe(100);
 				});
 		});
+		test('status:200 returns a object with a comment counter', () => {
+			return request(app)
+				.get('/api/articles/1')
+				.expect(200)
+				.then(({ body }) => {
+					expect(body.comment_count).toBe(11)
+				});
+		})
 		test('status:400 protected from sql injection', () => {
 			return request(app)
 				.get('/api/articles/DELETE FROM articles')

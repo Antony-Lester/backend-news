@@ -10,7 +10,7 @@ module.exports = function fetchArticles(filter = null) {
     if (filter) {
         [filter] = Object.entries(filter)
         dbValues.push(filter[0])
-        db.Values.push(filter[1])
+        dbValues.push(filter[1])
         dbRequest += `HAVING articles.$1 = '$2'`}
     dbRequest += `ORDER BY created_at DESC;`
     return db.query(dbRequest, dbValues)

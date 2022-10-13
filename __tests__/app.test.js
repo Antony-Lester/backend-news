@@ -3,6 +3,8 @@ const request = require('supertest');
 const db = require(`../db/connection`);
 const seed = require('../db/seeds/seed');
 const testData = require('../db/data/test-data');
+const { expect } = require('@jest/globals');
+
 
 
 
@@ -348,6 +350,30 @@ describe('POST:', () => {
 				})
 				.expect(404)
 				.then(res => {expect(res._body).toEqual({ msg: 'Not found' })});
+		})
+	})
+})
+describe('DELETE:', () => { 
+	describe('/api/comments/:comment_id', () => { 
+		test('status:204 deletes the given comment from database by comment_id returns no content', () => {
+			return request(app)
+				.delete('/api/comments/1')
+				.expect(204)
+				.then((res) => { expect(res.noContent).toBe(true) })
+				.then(() => { return request(app).get('/api/articles/9/comments') })
+				.then((deletedCheck) => {expect(deletedCheck._body.length).toBe(1)})
+		})
+		test('status:400 returns error message when comment_id is invalid', () => {
+			return request(app)
+				.delete('/api/comments/apple')
+				.expect(400)
+				.then((res) => { expect(res._body).toEqual({msg: "Bad request"}) })
+		})
+		test('status:404 returns error message when comment_id is invalid', () => {
+			return request(app)
+				.delete('/api/comments/999999')
+				.expect(404)
+				.then((res) => { expect(res._body).toEqual({msg: "Not found"}) })
 		})
 	})
 })

@@ -3,6 +3,7 @@ const request = require('supertest');
 const db = require(`../db/connection`);
 const seed = require('../db/seeds/seed');
 const testData = require('../db/data/test-data');
+const { expect } = require('@jest/globals');
 
 
 
@@ -98,6 +99,49 @@ describe('GET:', () => {
 				.expect(404)
 					.then(({ body }) => {
 					expect(body.msg).toEqual('Not found');
+				});
+			})
+			test('status:200 should sort by given category defaulting to descending order', () => { 
+				return request(app)
+				.get('/api/articles?topic=mitch&sort_by=title')
+				.expect(200)
+					.then(res => {
+						expect(res.body.length).toBe(4)
+						expect(res.body).toBeSortedBy('title', {descending: true});
+				});
+			})
+			test('status:200 should sort by given category in descending order when specified', () => {
+				return request(app)
+				.get('/api/articles?topic=mitch&sort_by=title&order=des')
+				.expect(200)
+					.then(res => {
+						expect(res.body.length).toBe(4)
+						expect(res.body).toBeSortedBy('title', {descending: true});
+				});
+			})
+			test('status:200 should sort by given category in ascending order when specified', () => { 
+				return request(app)
+				.get('/api/articles?topic=mitch&sort_by=title&order=asc')
+				.expect(200)
+					.then(res => {
+						expect(res.body.length).toBe(4)
+						expect(res.body).toBeSortedBy('title', {descending: false});
+				});
+			})
+			test('status:200 should return sort order as descending if order value is invalid', () => { 
+				return request(app)
+				.get('/api/articles?sort_by=title&order=apple')
+				.expect(200)
+				.then(res => {
+					expect(res.body).toBeSortedBy('title', {descending: true});
+			});
+			})
+			test('status:400 should return error if sort_by value not in database/invalid', () => { 
+				return request(app)
+				.get('/api/articles?sort_by=apple')
+				.expect(400)
+				.then(({ body }) => {
+					expect(body).toEqual({ msg: 'Bad request' });
 				});
 			})
 		 })

@@ -90,7 +90,7 @@ describe('GET:', () => {
 				});
 		});
 		describe('/comments', () => {
-			test('status:200 returns a array of objects with the required properties', () => {
+			test('status:200 returns the comment objects for the requested article with the required properties', () => {
 				return request(app)
 					.get('/api/articles/1/comments')
 					.expect(200)
@@ -108,7 +108,7 @@ describe('GET:', () => {
 						
 					});
 			 })
-			test('status:200 returns array of objects sorted by created_at descending', () => {
+			test('status:200 returns array of comment objects sorted by created_at descending', () => {
 				return request(app)
 					.get('/api/articles/1/comments')
 					.expect(200)

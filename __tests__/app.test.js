@@ -113,9 +113,7 @@ describe('GET:', () => {
 					.get('/api/articles/1/comments')
 					.expect(200)
 					.then(( comments ) => {
-						expect(comments._body[0].created_at).toBe('2020-11-03T21:00:00.000Z')
-						expect(comments._body[1].created_at).toBe('2020-10-31T03:03:00.000Z')
-						expect(comments._body[2].created_at).toBe('2020-07-21T00:20:00.000Z')
+						expect(comments._body).toBeSorted({ descending: true })
 					});
 			 })
 			test('status:404 no content', () => {

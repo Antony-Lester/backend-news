@@ -21,7 +21,7 @@ app.get('/api/users', getUsers);
 
 app.patch('/api/articles/:article_id', patchArticle);
 
-//app.post('/api/articles/:article_id/comments,', postComment)
+app.post('/api/articles/:article_id/comments', postComment)
 
 app.all('/*', (req, res, next) => {
     res.status(404).send({ msg: 'Not found' });
@@ -38,7 +38,7 @@ app.use((err, req, res, next) => {
     } else { next(err) };
 });
 app.use((err, req, res, next) => {
-    if (err.code === 404) {
+    if (err.code === 404 || err.code === "23503") {
         res.status(404).send({ msg: 'Not found' });
     } else { next(err) };
 });
@@ -47,18 +47,3 @@ app.use((err, req, res, next) => {
 });
 
 module.exports = app;
-
-/*
-10. POST /api/articles/:article_id/comments
-
-Description
-Edit
-Request body accepts:
-
-an object with the following properties:
-username
-body
-Responds with:
-
-the posted comment
-*/

@@ -5,6 +5,7 @@ const seed = require('../db/seeds/seed');
 const testData = require('../db/data/test-data');
 
 
+
 beforeEach(() => seed(testData));
 afterAll(() => {
 	if (db.end) db.end();
@@ -76,7 +77,7 @@ describe('GET:', () => {
 				.get('/api/articles')
 				.expect(200)
 				.then(res => {
-					expect(res).toBeSorted({ descending: true })
+					expect(res._body).toBeSorted({ descending: true })
 				});
 		})
 		describe('queries', () => {
@@ -285,9 +286,69 @@ describe('PATCH:', () => {
 		});
 	});
 });
-
-
-
-//You could add another test for an invalid_id, api/articles/banana/comments etc. Should be a 400.
-
-//Also are there any articles that exist but don't have comments? If so you should return an empty array!
+describe('POST:', () => { 
+	describe('/api/articles/:article_id/comments', () => { 
+		test('status:201 assigns new comment to database from a known user and returns comment', () => {
+			return request(app)
+				.post('/api/articles/1/comments')
+				.send({
+					username: 'butter_bridge',
+					body: 'test comment'
+				})
+				.expect(201)
+				.then(res => {
+					expect(res._body).toEqual(
+						expect.objectContaining({
+							article_id: 1,
+							author: 'butter_bridge',
+							body: 'test comment',
+							comment_id: 19,
+							created_at: expect.any(String),
+							votes: 0
+						})
+					)
+				});
+		})
+		test('status:400 rejects a comment without a valid comment', () => {
+			return request(app)
+				.post('/api/articles/1/comments')
+				.send({
+					username: 'butter_bridge',
+					body: 8
+				})
+				.expect(400)
+				.then(res => { expect(res._body).toEqual({ msg: "Bad request" }) })
+		})
+		test('status:400 returns a error when the article_id is not valid', () => { 
+			return request(app)
+				.post('/api/articles/apple/comments')
+				.send({
+					username: 'butter_bridge',
+					body: 'test comment'
+				})
+				.expect(400)
+				.then(res => {expect(res._body).toEqual({ msg: "Bad request" })});
+		})
+		test('status:404 returns a error when the user dose not exist', () => {
+			return request(app)
+				.post('/api/articles/1/comments')
+				.send({
+					username: 'unknown_user',
+					body: 'test comment'
+				})
+				.expect(404)
+				.then(res => {expect(res._body).toEqual({ msg: 'Not found' })});
+		})
+		test('status:404 returns a error when the article_id dose not exits', () => { 
+			return request(app)
+				.post('/api/articles/99999999/comments')
+				.send({
+					username: 'butter_bridge',
+					body: 'test comment'
+				})
+				.expect(404)
+				.then(res => {expect(res._body).toEqual({ msg: 'Not found' })});
+		})
+	})
+	})
+})

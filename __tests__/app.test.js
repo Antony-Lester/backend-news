@@ -116,6 +116,14 @@ describe('GET:', () => {
 						expect(comments._body).toBeSorted({ descending: true })
 					});
 			 })
+			 test('status:404 returns a empty array if article dose not have any comments', () => {
+				return request(app)
+					.get('/api/articles/2/comments')
+					.expect(404)
+					.then(({ body }) => {
+						expect(body.msg).toEqual('Not found');
+					});
+			})
 			test('status:404 no content', () => {
 				return request(app)
 				.get('/api/articles/99999/comments')

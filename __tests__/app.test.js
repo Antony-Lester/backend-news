@@ -288,14 +288,14 @@ describe('PATCH:', () => {
 });
 describe('POST:', () => { 
 	describe('/api/articles/:article_id/comments', () => { 
-		test('status:202 assigns new comment to database from a known user and returns comment', () => {
+		test('status:201 assigns new comment to database from a known user and returns comment', () => {
 			return request(app)
 				.post('/api/articles/1/comments')
 				.send({
 					username: 'butter_bridge',
 					body: 'test comment'
 				})
-				.expect(202)
+				.expect(201)
 				.then(res => {
 					expect(res._body).toEqual(
 						expect.objectContaining({
@@ -308,17 +308,7 @@ describe('POST:', () => {
 						})
 					)
 				});
-		 })
-		test('status:404 returns a error when the user dose not exist', () => {
-			return request(app)
-				.post('/api/articles/1/comments')
-				.send({
-					username: 'unknown_user',
-					body: 'test comment'
-				})
-				.expect(404)
-				.then(res => {expect(res._body).toEqual({ msg: 'Not found' })});
-		 })
+		})
 		test('status:400 rejects a comment without a valid comment', () => {
 			return request(app)
 				.post('/api/articles/1/comments')
@@ -328,6 +318,36 @@ describe('POST:', () => {
 				})
 				.expect(400)
 				.then(res => { expect(res._body).toEqual({ msg: "Bad request" }) })
-		 })
+		})
+		test('status:400 returns a error when the article_id is not valid', () => { 
+			return request(app)
+				.post('/api/articles/apple/comments')
+				.send({
+					username: 'butter_bridge',
+					body: 'test comment'
+				})
+				.expect(400)
+				.then(res => {expect(res._body).toEqual({ msg: "Bad request" })});
+		})
+		test('status:404 returns a error when the user dose not exist', () => {
+			return request(app)
+				.post('/api/articles/1/comments')
+				.send({
+					username: 'unknown_user',
+					body: 'test comment'
+				})
+				.expect(404)
+				.then(res => {expect(res._body).toEqual({ msg: 'Not found' })});
+		})
+		test('status:404 returns a error when the article_id dose not exits', () => { 
+			return request(app)
+				.post('/api/articles/99999999/comments')
+				.send({
+					username: 'butter_bridge',
+					body: 'test comment'
+				})
+				.expect(404)
+				.then(res => {expect(res._body).toEqual({ msg: 'Not found' })});
+		})
 	})
 })

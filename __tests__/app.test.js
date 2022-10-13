@@ -42,6 +42,64 @@ describe('GET:', () => {
 				});
 		});
 	});
+	describe('/api/articles', () => { 
+		test('status:200 returns a array of objects', () => {
+			return request(app)
+				.get('/api/articles')
+				.expect(200)
+				.then(res => {
+					expect(res.body).toBeInstanceOf(Array);
+					res.body.forEach(article => expect(article).toBeInstanceOf(Object))
+				});
+		 })
+		test('status:200 the objects contain the required property', () => {
+			return request(app)
+				.get('/api/articles')
+				.expect(200)
+				.then(res => {res.body.forEach(() => {
+					expect.objectContaining({
+						author: expect.any(String),
+						title: expect.any(String),
+						article_id: expect.any(Number),
+						topic: expect.any(String),
+						body: expect.any(String),
+						created_at: expect.any(Number),
+						votes: expect.any(Number),
+						comment_count: expect.any(Number),
+						})
+					})
+				});
+		})
+		test('status:200 the array should be sorted by date descending as default', () => {
+			return request(app)
+				.get('/api/articles')
+				.expect(200)
+				.then(res => {
+					expect(res).toBeSorted({ descending: true })
+				});
+		})
+		describe('queries', () => {
+			test('status:200 should accept "topic" and filters results by the given value', () => {
+				return request(app)
+				.get('/api/articles?topic=mitch')
+				.expect(200)
+					.then(res => {
+						expect(res.body.length).toBe(4)
+						res.body.forEach((article) => { 
+							expect(article.topic).toBe('mitch')
+						})
+				});
+			})
+			test('status:404 should return error if topic value not in database', () => {
+				return request(app)
+				.get('/api/articles?topic=apple')
+				.expect(404)
+					.then(({ body }) => {
+					expect(body.msg).toEqual('Not found');
+				});
+			})
+		 })
+	})
 	describe('/api/articles/:article_id', () => {
 		test('status:200 returns a single object', () => {
 			return request(app)

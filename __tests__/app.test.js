@@ -147,6 +147,50 @@ describe('GET:', () => {
 					expect(body.msg).toEqual('Not found');
 				});
 		});
+		describe('/comments', () => {
+			test('status:200 returns the comment objects for the requested article with the required properties', () => {
+				return request(app)
+					.get('/api/articles/1/comments')
+					.expect(200)
+					.then((comments) => {
+						comments._body.forEach(comment => {
+							expect(comment).toEqual(
+								expect.objectContaining({
+									comment_id: expect.any(Number),
+									votes: expect.any(Number),
+									created_at: expect.any(String),
+									author: expect.any(String),
+									body: expect.any(String)
+							}))
+						 })
+						
+					});
+			 })
+			test('status:200 returns array of comment objects sorted by created_at descending', () => {
+				return request(app)
+					.get('/api/articles/1/comments')
+					.expect(200)
+					.then(( comments ) => {
+						expect(comments._body).toBeSorted({ descending: true })
+					});
+			 })
+			 test('status:404 returns a empty array if article dose not have any comments', () => {
+				return request(app)
+					.get('/api/articles/2/comments')
+					.expect(404)
+					.then(({ body }) => {
+						expect(body.msg).toEqual('Not found');
+					});
+			})
+			test('status:404 no content', () => {
+				return request(app)
+				.get('/api/articles/99999/comments')
+				.expect(404)
+				.then(({ body }) => {
+					expect(body.msg).toEqual('Not found');
+				});
+			 })
+		})
 	});
 	describe('/api/users', () => {
 		test('status:200 returns a single array', () => {

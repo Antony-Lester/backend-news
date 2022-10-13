@@ -4,6 +4,7 @@ const db = require(`../db/connection`);
 const seed = require('../db/seeds/seed');
 const testData = require('../db/data/test-data');
 
+
 beforeEach(() => seed(testData));
 afterAll(() => {
 	if (db.end) db.end();
@@ -112,12 +113,18 @@ describe('GET:', () => {
 				return request(app)
 					.get('/api/articles/1/comments')
 					.expect(200)
-					.then(( comments ) => {
-						expect(comments._body[0].created_at).toBe('2020-11-03T21:00:00.000Z')
-						expect(comments._body[1].created_at).toBe('2020-10-31T03:03:00.000Z')
-						expect(comments._body[2].created_at).toBe('2020-07-21T00:20:00.000Z')
+					.then((comments) => {
+						expect(comments._body).toBeSorted({ descending: true })
 					});
-			 })
+			})
+			test('status:404 returns a empty array if article dose not have any comments', () => {
+				return request(app)
+					.get('/api/articles/2/comments')
+					.expect(404)
+					.then(({ body }) => {
+						expect(body.msg).toEqual('Not found');
+					});
+			})
 			test('status:404 no content', () => {
 				return request(app)
 				.get('/api/articles/99999/comments')
@@ -125,7 +132,7 @@ describe('GET:', () => {
 				.then(({ body }) => {
 					expect(body.msg).toEqual('Not found');
 				});
-			 })
+			})
 		})
 	});
 	describe('/api/users', () => {
@@ -220,3 +227,9 @@ describe('PATCH:', () => {
 		});
 	});
 });
+
+
+
+//You could add another test for an invalid_id, api/articles/banana/comments etc. Should be a 400.
+
+//Also are there any articles that exist but don't have comments? If so you should return an empty array!

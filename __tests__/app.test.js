@@ -4,6 +4,7 @@ const db = require(`../db/connection`);
 const seed = require('../db/seeds/seed');
 const testData = require('../db/data/test-data');
 
+
 beforeEach(() => seed(testData));
 afterAll(() => {
 	if (db.end) db.end();
@@ -170,11 +171,11 @@ describe('GET:', () => {
 				return request(app)
 					.get('/api/articles/1/comments')
 					.expect(200)
-					.then(( comments ) => {
+					.then((comments) => {
 						expect(comments._body).toBeSorted({ descending: true })
 					});
-			 })
-			 test('status:404 returns a empty array if article dose not have any comments', () => {
+			})
+			test('status:404 returns a empty array if article dose not have any comments', () => {
 				return request(app)
 					.get('/api/articles/2/comments')
 					.expect(404)
@@ -189,7 +190,7 @@ describe('GET:', () => {
 				.then(({ body }) => {
 					expect(body.msg).toEqual('Not found');
 				});
-			 })
+			})
 		})
 	});
 	describe('/api/users', () => {
@@ -284,3 +285,9 @@ describe('PATCH:', () => {
 		});
 	});
 });
+
+
+
+//You could add another test for an invalid_id, api/articles/banana/comments etc. Should be a 400.
+
+//Also are there any articles that exist but don't have comments? If so you should return an empty array!

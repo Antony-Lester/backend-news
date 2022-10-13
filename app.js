@@ -11,6 +11,8 @@ const getComments = require(`./controllers/get-comments`)
 
 const patchArticle = require(`./controllers/patch-article`);
 
+const postComment = require(`./controllers/post-comment`)
+
 app.get('/api/topics', getTopics);
 app.get('/api/articles/', getArticles)
 app.get('/api/articles/:article_id', getArticle);
@@ -18,6 +20,8 @@ app.get('/api/articles/:article_id/comments', getComments)
 app.get('/api/users', getUsers);
 
 app.patch('/api/articles/:article_id', patchArticle);
+
+//app.post('/api/articles/:article_id/comments,', postComment)
 
 app.all('/*', (req, res, next) => {
     res.status(404).send({ msg: 'Not found' });
@@ -44,3 +48,17 @@ app.use((err, req, res, next) => {
 
 module.exports = app;
 
+/*
+10. POST /api/articles/:article_id/comments
+
+Description
+Edit
+Request body accepts:
+
+an object with the following properties:
+username
+body
+Responds with:
+
+the posted comment
+*/

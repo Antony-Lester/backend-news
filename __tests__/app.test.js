@@ -350,5 +350,4 @@ describe('POST:', () => {
 				.then(res => {expect(res._body).toEqual({ msg: 'Not found' })});
 		})
 	})
-	})
 })

@@ -1,42 +1,60 @@
-# To Clone & Run
+# This project is a simple database to store
 
-## 1) Create Environment variables
+    blog/news articles, 
+    comments relating to the articles,
+    the users that made the comments, 
+    and the topics that the articles relate to. 
 
-you will need to add two files to root called:
+## Local Setup & Installation
 
-> .env.development
+If you would like to install the project locally then please clone the repo:
 
-> .env.test
+><https://github.com/Antony-Lester/backend-news.git>
 
-these files should contain the correct database name for the environment:
+Once you have cloned, setup your environment and databases:
 
-```
-PGDATABASE=nc_news
+>echo "PGDATABASE = news_test" >> .env.test; echo "PGDATABASE = news" >> .env.development; npm run setup;
 
-PGDATABASE=nc_news_test
-```
+### Test - Check it works
 
-## 2) Initiate modules and database
+This project has been created with the core Agile practice of TDD (Test-Driven-Development) using the popular Jest Testing framework to ensure that the API works as it is intended to.
 
-run the following to install required modules:
+>npm t
 
-> npm i
+### Run - Locally - Developer Instance
 
-then run the following to setup the database:
+To start the API:
 
-> npm run-script setup-dbs
+>npm run start
 
-## Available endpoints
+It will be listening on port 9090
 
->/api/topics
+### Interact - Locally
 
-GET: returns all topics.
+#### With Chrome Browser
 
->/api/users
+add JSON viewer extension to make it look fancy.
 
-GET: returns all users.
+><https://chrome.google.com/webstore/detail/json-viewer>
 
->/api/articles/:article_id
+then check out the available endpoints.
 
-GET: returns a specific article. 
-PATCH: updates a specific article.
+><http://127.0.0.1:9090/api>
+
+#### With Insomnia - Locally
+
+Install insomnia & Open.
+
+><https://docs.insomnia.rest/insomnia/get-started>
+
+Select GET, Enter path, & Click Send.
+
+><127.0.0.1:9090/api>
+
+#### Some Example Calls
+
+><127.0.0.1:9090/api/articles?topic=coding&sort_by=title&order=asc>
+
+><127.0.0.1:9090/api/articles/2/comments>
+
+><127.0.0.1:9090/api/users>

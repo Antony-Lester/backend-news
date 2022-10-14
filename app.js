@@ -30,6 +30,7 @@ app.patch('/api/articles/:article_id', patchArticle);
 app.post('/api/articles/:article_id/comments', postComment)
 
 app.delete('/api/comments/:comment_id', deleteComment)
+
 app.all('/*', (req, res, next) => {
     res.status(404).send({ msg: 'Not found' });
 });
@@ -53,8 +54,8 @@ app.use((err, req, res, next) => {
         res.status(404).send({ msg: 'Not found' });
     } else { next(err) };
 });
-app.use((err, req, res, next) => {
-    res.sendStatus(500).send({ msg: 'Internal server error' });
-});
+//app.use((err, req, res, next) => {
+//    res.sendStatus(500).send({ msg: 'Internal server error' });
+//});
 
 module.exports = app;

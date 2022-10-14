@@ -14,6 +14,8 @@ const patchArticle = require(`./controllers/patch-article`);
 
 const postComment = require(`./controllers/post-comment`)
 
+const deleteComment = require(`./controllers/delete-comment`)
+
 app.get('/api', getEndpoints)
 app.get('/api/topics', getTopics);
 app.get('/api/articles/', getArticles)
@@ -25,6 +27,7 @@ app.patch('/api/articles/:article_id', patchArticle);
 
 app.post('/api/articles/:article_id/comments', postComment)
 
+app.delete('/api/comments/:comment_id', deleteComment)
 app.all('/*', (req, res, next) => {
     res.status(404).send({ msg: 'Not found' });
 });
@@ -35,7 +38,9 @@ app.use((err, req, res, next) => {
     } else { next(err) };
 });
 app.use((err, req, res, next) => {
-    if (err.code === 400 || err.code === "22P02") {
+    if (err.code === 400 ||
+        err.code === "22P02" ||
+        err.code === "42703") {
         res.status(400).send({ msg: 'Bad request' });
     } else { next(err) };
 });
@@ -51,10 +56,3 @@ app.use((err, req, res, next) => {
 });
 
 module.exports = app;
-
-
-/*
-Responds with:
-
-JSON describing all the available endpoints on your API, see the endpoints.json for an (incomplete) example that you could build on, or create your own from scratch!
-*/

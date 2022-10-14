@@ -6,6 +6,7 @@ const testData = require('../db/data/test-data');
 
 
 
+
 beforeEach(() => seed(testData));
 afterAll(() => {
 	if (db.end) db.end();
@@ -109,6 +110,49 @@ describe('GET:', () => {
 				.expect(404)
 					.then(({ body }) => {
 					expect(body.msg).toEqual('Not found');
+				});
+			})
+			test('status:200 should sort by given category defaulting to descending order', () => { 
+				return request(app)
+				.get('/api/articles?topic=mitch&sort_by=title')
+				.expect(200)
+					.then(res => {
+						expect(res.body.length).toBe(4)
+						expect(res.body).toBeSortedBy('title', {descending: true});
+				});
+			})
+			test('status:200 should sort by given category in descending order when specified', () => {
+				return request(app)
+				.get('/api/articles?topic=mitch&sort_by=title&order=des')
+				.expect(200)
+					.then(res => {
+						expect(res.body.length).toBe(4)
+						expect(res.body).toBeSortedBy('title', {descending: true});
+				});
+			})
+			test('status:200 should sort by given category in ascending order when specified', () => { 
+				return request(app)
+				.get('/api/articles?topic=mitch&sort_by=title&order=asc')
+				.expect(200)
+					.then(res => {
+						expect(res.body.length).toBe(4)
+						expect(res.body).toBeSortedBy('title', {descending: false});
+				});
+			})
+			test('status:200 should return sort order as descending if order value is invalid', () => { 
+				return request(app)
+				.get('/api/articles?sort_by=title&order=apple')
+				.expect(200)
+				.then(res => {
+					expect(res.body).toBeSortedBy('title', {descending: true});
+			});
+			})
+			test('status:400 should return error if sort_by value not in database/invalid', () => { 
+				return request(app)
+				.get('/api/articles?sort_by=apple')
+				.expect(400)
+				.then(({ body }) => {
+					expect(body).toEqual({ msg: 'Bad request' });
 				});
 			})
 		 })
@@ -359,6 +403,30 @@ describe('POST:', () => {
 				})
 				.expect(404)
 				.then(res => {expect(res._body).toEqual({ msg: 'Not found' })});
+		})
+	})
+})
+describe('DELETE:', () => { 
+	describe('/api/comments/:comment_id', () => { 
+		test('status:204 deletes the given comment from database by comment_id returns no content', () => {
+			return request(app)
+				.delete('/api/comments/1')
+				.expect(204)
+				.then((res) => { expect(res.noContent).toBe(true) })
+				.then(() => { return request(app).get('/api/articles/9/comments') })
+				.then((deletedCheck) => {expect(deletedCheck._body.length).toBe(1)})
+		})
+		test('status:400 returns error message when comment_id is invalid', () => {
+			return request(app)
+				.delete('/api/comments/apple')
+				.expect(400)
+				.then((res) => { expect(res._body).toEqual({msg: "Bad request"}) })
+		})
+		test('status:404 returns error message when comment_id is invalid', () => {
+			return request(app)
+				.delete('/api/comments/999999')
+				.expect(404)
+				.then((res) => { expect(res._body).toEqual({msg: "Not found"}) })
 		})
 	})
 })

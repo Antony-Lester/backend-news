@@ -10,10 +10,17 @@ module.exports = function fetchArticles(filter) {
         dbValues = Object.entries(filter)
         dbRequest += `HAVING articles.${dbValues[0][0]} = '${dbValues[0][1]}'`
     }
-    dbRequest += ` ORDER BY created_at DESC;`
+    if (query.hasOwnProperty('sort_by')) {
+        dbRequest += ` ORDER BY articles.${query.sort_by}`
+        if (query.hasOwnProperty('order') && query.order === "asc") { dbRequest += ` ASC;` }
+        else { dbRequest += ` DESC;` }      
+    }
+    else { dbRequest += ` ORDER BY created_at DESC;` }
     return db.query(dbRequest)
         .then(({ rows: articles }) => {
             if (articles.length === 0) {return Promise.reject({ code: 404 })}
-            else { return articles }
+            else {
+                return articles
+            }
         })
 };

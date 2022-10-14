@@ -18,7 +18,6 @@ describe('GET:', () => {
 				.get('/api')
 				.expect(200)
 				.then(res => {
-					console.log(res._body)
 					expect(res._body).toBeInstanceOf(Object)
 				})
 		})

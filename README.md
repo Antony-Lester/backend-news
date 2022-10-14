@@ -58,3 +58,18 @@ Select GET, Enter path, & Click Send.
 ><127.0.0.1:9090/api/articles/2/comments>
 
 ><127.0.0.1:9090/api/users>
+
+
+## Hosted Version 
+
+### Endpoint's
+
+><https://antony-lester-news-articles.herokuapp.com/api/>
+
+### Some Example Calls
+
+><https://antony-lester-news-articles.herokuapp.com/api/articles?topic=coding&sort_by=title&order=asc>
+
+><https://antony-lester-news-articles.herokuapp.com/api/articles/2/comments>
+
+><https://antony-lester-news-articles.herokuapp.com/api/users>

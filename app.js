@@ -3,6 +3,8 @@ const app = express();
 
 app.use(express.json());
 
+
+
 const getEndpoints = require(`./controllers/get-endpoints`)
 const getArticle = require(`./controllers/get-article`);
 const getArticles = require(`./controllers/get-articles`);

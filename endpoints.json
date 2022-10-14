@@ -1,27 +1,86 @@
 {
-  "GET /api": {
-    "description": "serves up a json representation of all the available endpoints of the api"
-  },
-  "GET /api/topics": {
-    "description": "serves an array of all topics",
-    "queries": [],
-    "exampleResponse": {
-      "topics": [{ "slug": "football", "description": "Footie!" }]
-    }
-  },
-  "GET /api/articles": {
-    "description": "serves an array of all topics",
-    "queries": ["author", "topic", "sort_by", "order"],
-    "exampleResponse": {
-      "articles": [
-        {
-          "title": "Seafood substitutions are increasing",
-          "topic": "cooking",
-          "author": "weegembump",
-          "body": "Text from the article..",
-          "created_at": 1527695953341
-        }
-      ]
-    }
-  }
+	"GET /api/topics": {
+		"description": "",
+		"exampleResponse": {
+			"topics": [
+				{
+					"description": "what books are made of",
+					"slug": "paper"
+				}
+			]
+		}
+	},
+	"GET /api/articles": {
+		"description": "serves an array of all articles",
+		"queries": ["author", "topic", "sort_by", "order"],
+		"exampleResponse": {
+			"articles": [
+				{
+					"title": "Seafood substitutions are increasing",
+					"topic": "cooking",
+					"author": "weegembump",
+					"body": "Text from the article..",
+					"created_at": 1527695953341
+				}
+			]
+		}
+	},
+	"GET /api/articles/:article_id": {
+		"description": "serves an object of requested article",
+		"exampleResponse": {
+			"article": {
+				"article_id": 1,
+				"title": "Seafood substitutions are increasing",
+				"topic": "cooking",
+				"author": "weegembump",
+				"body": "Text from the article..",
+				"created_at": 1527695953341,
+				"votes": 100
+			}
+		}
+	},
+	"GET /api/users": {
+		"description": "serves an array of all users",
+		"exampleResponse": {
+			"users": [
+				{
+					"username": "butter_bridge",
+					"name": "jonny",
+					"avatar_url": "https://www.healthytherapies.com/wp-content/uploads/2016/06/Lime3.jpg"
+				}
+			]
+		}
+	},
+	"PATCH /api/articles/:article_id": {
+		"description": "accepts an object with inc_votes to update database serves updated article votes",
+		"exampleRequest": { "inc_votes": "+10" },
+		"exampleResponse": {
+			"article": {
+				"article_id": 1,
+				"title": "Seafood substitutions are increasing",
+				"topic": "cooking",
+				"author": "weegembump",
+				"body": "Text from the article..",
+				"created_at": 1527695953341,
+				"votes": 110
+			}
+		}
+	},
+	"POST /api/articles/:article_id/comments": {
+		"description": "assigns a new comment to database and serves the result",
+		"exampleRequest": {
+			"username": "butter_bridge",
+			"body": "test comment"
+		},
+		"exampleResponse": {
+			"comment": {
+				"article_id": 1,
+				"author": "butter_bridge",
+				"body": "test comment",
+				"comment_id": 19,
+				"created_at": 1527695953341,
+				"votes": 0
+			}
+		}
+	}
 }

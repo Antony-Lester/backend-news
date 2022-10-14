@@ -3,6 +3,7 @@ const app = express();
 
 app.use(express.json());
 
+const getEndpoints = require(`./controllers/get-endpoints`)
 const getArticle = require(`./controllers/get-article`);
 const getArticles = require(`./controllers/get-articles`);
 const getTopics = require(`./controllers/get-topics`);
@@ -13,6 +14,7 @@ const patchArticle = require(`./controllers/patch-article`);
 
 const postComment = require(`./controllers/post-comment`)
 
+app.get('/api', getEndpoints)
 app.get('/api/topics', getTopics);
 app.get('/api/articles/', getArticles)
 app.get('/api/articles/:article_id', getArticle);
@@ -38,7 +40,9 @@ app.use((err, req, res, next) => {
     } else { next(err) };
 });
 app.use((err, req, res, next) => {
-    if (err.code === 404 || err.code === "23503") {
+    if (err.code === 404 ||
+        err.code === "23503" ||
+        err.code === "42703") {
         res.status(404).send({ msg: 'Not found' });
     } else { next(err) };
 });
@@ -47,3 +51,10 @@ app.use((err, req, res, next) => {
 });
 
 module.exports = app;
+
+
+/*
+Responds with:
+
+JSON describing all the available endpoints on your API, see the endpoints.json for an (incomplete) example that you could build on, or create your own from scratch!
+*/

@@ -11,6 +11,17 @@ afterAll(() => {
 	if (db.end) db.end();
 });
 describe('GET:', () => {
+	describe('/api', () => {
+		test('status:200 returns all available endpoints', () => { 
+			return request(app)
+				.get('/api')
+				.expect(200)
+				.then(res => {
+					console.log(res._body)
+					expect(res._body).toBeInstanceOf(Object)
+				})
+		})
+	})
 	describe('/api/topics', () => {
 		test('status:200 returns a single array', () => {
 			return request(app)

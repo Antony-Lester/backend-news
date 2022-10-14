@@ -13,6 +13,8 @@ const patchArticle = require(`./controllers/patch-article`);
 
 const postComment = require(`./controllers/post-comment`)
 
+const deleteComment = require(`./controllers/delete-comment`)
+
 app.get('/api/topics', getTopics);
 app.get('/api/articles/', getArticles)
 app.get('/api/articles/:article_id', getArticle);
@@ -23,6 +25,7 @@ app.patch('/api/articles/:article_id', patchArticle);
 
 app.post('/api/articles/:article_id/comments', postComment)
 
+app.delete('/api/comments/:comment_id', deleteComment)
 app.all('/*', (req, res, next) => {
     res.status(404).send({ msg: 'Not found' });
 });

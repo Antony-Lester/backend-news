@@ -3,15 +3,13 @@ const app = express();
 
 app.use(express.json());
 
-
-
 const getEndpoints = require(`./controllers/get-endpoints`)
 const getArticle = require(`./controllers/get-article`);
 const getArticles = require(`./controllers/get-articles`);
 const getTopics = require(`./controllers/get-topics`);
 const getUsers = require(`./controllers/get-users`);
 const getComments = require(`./controllers/get-comments`)
-
+const getUser = require(`./controllers/get-user`)
 const patchArticle = require(`./controllers/patch-article`);
 
 const postComment = require(`./controllers/post-comment`)
@@ -25,6 +23,7 @@ app.get('/api/articles/', getArticles)
 app.get('/api/articles/:article_id', getArticle);
 app.get('/api/articles/:article_id/comments', getComments)
 app.get('/api/users', getUsers);
+app.get('/api/users/:username', getUser)
 app.patch('/api/articles/:article_id', patchArticle);
 app.post('/api/articles/:article_id/comments', postComment)
 app.delete('/api/comments/:comment_id', deleteComment)
@@ -34,6 +33,7 @@ app.all('/*', (req, res, next) => {
 });
 
 app.use((err, req, res, next) => {
+    console.log(err)
     if (err.code === 304) {
         res.status(304).send({ msg: err.statusMessage });
     } else { next(err) };

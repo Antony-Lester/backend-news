@@ -51,6 +51,14 @@
 			]
 		}
 	},
+	"GET /api/user/:username": {
+		"description": "returns the required user",
+		"exampleResponse": {
+			"username": "butter_bridge",
+			"name": "jonny",
+			"avatar_url": "https://www.healthytherapies.com/wp-content/uploads/2016/06/Lime3.jpg"
+		}
+	},
 	"PATCH /api/articles/:article_id": {
 		"description": "accepts an object with inc_votes to update database serves updated article votes",
 		"exampleRequest": { "inc_votes": "+10" },

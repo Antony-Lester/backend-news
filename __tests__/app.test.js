@@ -283,6 +283,27 @@ describe('GET:', () => {
 				});
 		});
 	});
+	describe("/api/users/:username", () => {
+		it("Status: 200 - Should respond with a user object that has three properties for given valid user", async () => {
+		  const response = await request(app).get('/api/users/rogersop').expect(200)
+		  const data = await response;
+		  const { _body: userData } = data;
+		  expect(Object.keys(userData)).toHaveLength(3);
+		  expect(typeof userData).toBe('object');
+		  expect(userData).toMatchObject({
+			username: 'rogersop',
+			name: 'paul',
+			avatar_url: 'https://avatars2.githubusercontent.com/u/24394918?s=400&v=4'
+		  })
+		})
+	
+		it("Status: 404 - Should respond with a message saying no user found with that username if non-existent", () => {
+		  return request(app).get('/api/users/notActualUsername').expect(404)
+		  .then(({ body }) => {
+			  expect(body.msg).toEqual('Not found');
+		  });
+		})
+	  })
 });
 describe('PATCH:', () => {
 	describe('/api/articles/:article_id', () => {

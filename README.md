@@ -1,4 +1,4 @@
-# This project is a simple database for
+# This project is a database for News Articles
 
     ## blog/news articles, 
     ## comments relating to the articles,

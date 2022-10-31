@@ -1,4 +1,4 @@
-# This project is a simple database for
+# This project is a database for News Articles
 
     ## blog/news articles, 
     ## comments relating to the articles,
@@ -31,7 +31,7 @@ Once you have cloned, setup your environment and databases:
 
 ### Test - Check it works
 
-This project has been created with the core Agile practice of TDD (Test-Driven-Development) using the popular Jest Testing framework to ensure that the API works as it is intended to.
+This project has been created with the core Agile practice of TDD (Test-Driven-Development) using the popular Jest Testing framework to ensure that the API works as intended.
 
 >npm t
 

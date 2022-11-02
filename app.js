@@ -26,18 +26,14 @@ app.get('/api/articles/:article_id/comments', getComments)
 app.get('/api/users', getUsers);
 app.get('/api/users/:username', getUser)
 app.patch('/api/articles/:article_id', patchArticle);
-//app.patch('/api/comments/:comment_id', patchComment)
 app.post('/api/articles/:article_id/comments', postComment)
-//app.post('/api/articles', postArticle)
 app.delete('/api/comments/:comment_id', deleteComment)
-//app.delete('/api/articles/:article_id', deleteArticle)
 
 app.all('/*', (req, res, next) => {
     res.status(404).send({ msg: 'Not found' });
 });
 
 app.use((err, req, res, next) => {
-    console.log(err)
     if (err.code === 304) {
         res.status(304).send({ msg: err.statusMessage });
     } else { next(err) };

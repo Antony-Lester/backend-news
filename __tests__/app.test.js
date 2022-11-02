@@ -367,8 +367,8 @@ describe('POST:', () => {
 			return request(app)
 				.post('/api/articles/1/comments')
 				.send({
-					username: 'butter_bridge',
-					body: 'test comment'
+					"username": "butter_bridge",
+					"body": "test comment"
 				})
 				.expect(201)
 				.then(res => {

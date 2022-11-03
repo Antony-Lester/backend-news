@@ -10,7 +10,7 @@ module.exports = function fetchArticles(query) {
         dbRequest += `HAVING articles.topic = '${query.topic}'`
     }
     if (query.hasOwnProperty('sort_by')) {
-        dbRequest += ` ORDER BY articles.${query.sort_by}`
+        dbRequest += ` ORDER BY ${query.sort_by}`//articles.
         if (query.hasOwnProperty('order') && query.order === "asc") { dbRequest += ` ASC;` }
         else { dbRequest += ` DESC;` }      
     }

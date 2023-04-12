@@ -6,7 +6,7 @@
     ## and the topics that the articles relate to. 
 
 ## Hosted Version 
-
+!!!OUTDATAED!!! no longer hosted on heroku
 ### Endpoint's
 
 ><https://antony-lester-news-articles.herokuapp.com/api/>
